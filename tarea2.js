@@ -1,7 +1,9 @@
-const array = [5, 1, 4, 2, 8]
+const array = (n) => Array.from({ length: n }, () => Math.floor(Math.random() * m * 10) + 1);
+let m = 10
+const a = array(m)
+
 function bubble_sort(array) {
     let n = array.length;
-
     if (n <= 1) {
         return "Ya esta ordenado"
     }
@@ -25,8 +27,6 @@ function bubble_sort(array) {
     return "Array ordenado: " + array
 }
 
-console.log(bubble_sort(array))
-
 function insertion_sort(array) {
     let n = array.length
     if (n <= 1) {
@@ -45,7 +45,6 @@ function insertion_sort(array) {
     }
     return "Array ordenado: " + array
 }
-console.log(insertion_sort(array))
 
 function selection_sort(array) {
     let n = array.length
@@ -61,14 +60,62 @@ function selection_sort(array) {
             if (array[j] < array[min]) {
                 min = j
             }
-
-            temp = array[i]
-            array[i] = array[min]
-            array[min]= temp
         }
+        let temp = array[i]
+        array[i] = array[min]
+        array[min] = temp
+
     }
 
     return "Array ordenado: " + array
 }
 
-console.log(selection_sort(array))
+function merge_sort(array) {
+    let n = array.length
+    if (n <= 1) {
+        return array
+    }
+
+    let pares = []
+    let impares = []
+    for (let i = 0; i < array.length; i++) {
+        if (i % 2 === 0) {
+            pares.push(array[i])
+        } else {
+            impares.push(array[i])
+        }
+    }
+
+    pares = merge_sort(pares);
+    impares = merge_sort(impares)
+
+    return fusionar(pares, impares)
+}
+
+function fusionar(izq, der) {
+    let resultado = []
+    let i = 0
+    let j = 0
+
+    while (i < izq.length && j < der.length) {
+        if (izq[i] <= der[j]) {
+            resultado.push(izq[i]); i++
+        } else {
+            resultado.push(der[j]); j++
+        }
+    }
+    while (i < izq.length) {
+        resultado.push(izq[i]); i++
+    }
+    while (j < der.length) {
+        resultado.push(der[j]); j++
+    }
+
+    return resultado;
+}
+
+console.log("Original:  ", a);
+console.log(bubble_sort([...a]));
+console.log(insertion_sort([...a]));
+console.log(selection_sort([...a]));
+console.log("Array ordenado: " + merge_sort([...a]));
