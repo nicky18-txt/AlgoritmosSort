@@ -5,7 +5,7 @@ const a = array(m)
 function bubble_sort(array) {
     let n = array.length;
     if (n <= 1) {
-        return "Ya esta ordenado"
+        return array
     }
 
     let swap;
@@ -24,13 +24,13 @@ function bubble_sort(array) {
             break;
         }
     }
-    return "Array ordenado: " + array
+    return array
 }
 
 function insertion_sort(array) {
     let n = array.length
     if (n <= 1) {
-        return "Ya esta ordenado el array"
+        return array
     }
 
     for (let i = 1; i < n; i++) {
@@ -43,14 +43,14 @@ function insertion_sort(array) {
         }
         array[j + 1] = k
     }
-    return "Array ordenado: " + array
+    return array
 }
 
 function selection_sort(array) {
     let n = array.length
 
     if (n <= 1) {
-        return "Ya esta ordenado"
+        return array
     }
 
     for (let i = 0; i < n; i++) {
@@ -67,7 +67,7 @@ function selection_sort(array) {
 
     }
 
-    return "Array ordenado: " + array
+    return array
 }
 
 function merge_sort(array) {
@@ -110,7 +110,7 @@ function fusionar(izq, der) {
     while (j < der.length) {
         resultado.push(der[j]); j++
     }
-
+    // console.log(`  fusionando ${JSON.stringify(izq)} + ${JSON.stringify(der)} → ${JSON.stringify(resultado)}`)
     return resultado;
 }
 
@@ -127,21 +127,79 @@ function quick_sort(array) {
     let mayores = [];
 
     for (let i = 0; i < array.length; i++) {
-        if(array[i] < pivote){
+        if (array[i] < pivote) {
             menores.push(array[i])
-        }else if(array[i] > pivote) {
+        } else if (array[i] > pivote) {
             mayores.push(array[i])
-        }else {
+        } else {
             iguales.push(array[i])
         }
     }
- 
+    // console.log(`  pivote ${pivote}: menores=${JSON.stringify(menores)} iguales=${JSON.stringify(iguales)} mayores=${JSON.stringify(mayores)}`)
     return [...quick_sort(menores), ...iguales, ...quick_sort(mayores)];
 }
 
-console.log("Original:  ", a);
-console.log(bubble_sort([...a]));
-console.log(insertion_sort([...a]));
-console.log(selection_sort([...a]));
-console.log("Array ordenado: " + merge_sort([...a]));
-console.log("Array ordenado: " + quick_sort([...a]));
+// console.log("Original:  ", a);
+// console.log(bubble_sort([...a]));
+// console.log(insertion_sort([...a]));
+// console.log(selection_sort([...a]));
+// console.log("Array ordenado: " + merge_sort([...a]));
+// console.log("Array ordenado: " + quick_sort([...a]));
+
+const rln = require("readline");
+
+const rl = rln.createInterface({ input: process.stdin, output: process.stdout });
+
+function algortimos(n) {
+    const a = array(n)
+
+    console.log("\n Original: ", n <= 20 ? a : "[" + a.slice(0, 5).join(", ") + " ... " + a.slice(-5).join(", ") + "]")
+    console.log("-----------------------------------------------------------------")
+
+    const algoritmos = [
+        { nombre: "Bubble Sort", fn: () => bubble_sort([...a])},
+        { nombre: "Insertion Sort", fn: () => insertion_sort([...a])},
+        { nombre: "Selection Sort", fn: () => selection_sort([...a])},
+        { nombre: "Merge Sort", fn: () => merge_sort([...a])},
+        // { nombre: "Heap Sort",      fn: () => heap_sort([...a])},
+        { nombre: "Quick Sort", fn: () => quick_sort([...a])},
+    ]
+
+    for (const algo of algoritmos) {
+        const t1 = performance.now()
+        const resultado = algo.fn()
+        const ms = (performance.now() - t1).toFixed(4)
+
+        const muestra = n <= 20
+            ? "→ [" + resultado + "]"
+            : "→ [" + resultado.slice(0, 3).join(", ") + " ... " + resultado.slice(-3).join(", ") + "]"
+
+        console.log(` ${algo.nombre.padEnd(16)}  ${ms.padStart(10)} ms ${muestra}`)
+    }
+    console.log("-----------------------------------------------------------------")
+}
+
+
+function menu() {
+    console.log("Análisis de Algoritmos de Sort - Nicole Altamirano")
+
+    rl.question(" Ingresa el valor de n (0 para salir): ", (respuesta) => {
+        const n = parseInt(respuesta)
+
+        if (n === 0) {
+            rl.close()
+            return
+        }
+
+        if (isNaN(n) || n < 1) {
+            console.log("Valor invalido, debe ingresar un numero mayor a 0")
+            menu()
+            return
+        }
+
+        algortimos(n)
+        menu()
+    })
+}
+
+menu()
