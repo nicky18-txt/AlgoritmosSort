@@ -114,8 +114,34 @@ function fusionar(izq, der) {
     return resultado;
 }
 
+function quick_sort(array) {
+    let n = array.length
+    if (n <= 1) {
+        return array
+    }
+
+    let indicePivote = Math.floor(Math.random() * array.length);
+    let pivote = array[indicePivote];
+    let menores = [];
+    let iguales = [];
+    let mayores = [];
+
+    for (let i = 0; i < array.length; i++) {
+        if(array[i] < pivote){
+            menores.push(array[i])
+        }else if(array[i] > pivote) {
+            mayores.push(array[i])
+        }else {
+            iguales.push(array[i])
+        }
+    }
+ 
+    return [...quick_sort(menores), ...iguales, ...quick_sort(mayores)];
+}
+
 console.log("Original:  ", a);
 console.log(bubble_sort([...a]));
 console.log(insertion_sort([...a]));
 console.log(selection_sort([...a]));
 console.log("Array ordenado: " + merge_sort([...a]));
+console.log("Array ordenado: " + quick_sort([...a]));
